@@ -9,21 +9,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      photo: {
         type: Sequelize.STRING,
         allowNull: false,
         required: true
       },
-      path: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        required: true
-      },
-      description: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        required: true
-      },
+
       createdAt: {
         allowNull: true,
         type: Sequelize.DATE
