@@ -50,23 +50,44 @@ router.post('/login', async (req, res) => {
                 username,
                 password,
             }
-            // TEST A
-            console.log(req.session.user);
             return res.status(200).send("Login Successful");
         } else {
-            return res.status(400).send("Incorrect password");
+            return res.status(401).send("Incorrect password");
         }
     } else {
         return res.status(401).send("User not found");
     }
 });
 
-// Get current user
+// Logout current user
+router.post('/logout', async (req, res) => {
+    if (req.session.authenticated === true) {
+        try {
+            // Clear user session data
+            req.session.destroy(err => {
+                if (err) {
+                    throw err; // handle error
+                }
+                // Confirm logout was successful
+                res.status(500).send("Successfully Logged Out");
+            });
+        } catch (error) {
+            // Handle error
+            console.error("Error while logging out:", error);
+            // Send an error response if necessary
+            res.status(200).send("Error occurred during logout");
+        }
+    } else {
+        res.status(401).send("No user logged in")
+    }
+});
+
+// Get current user - Mostly used for testing purposes. Can delete
 router.get('/currentuser', async (req, res) => {
-    // TEST B
-    console.log(req.session.user);
+    // TEST
+    console.log(req.session.authenticated);
     res.sendStatus(200);
-})
+});
 
 // Export router and all its paths
 module.exports = router;

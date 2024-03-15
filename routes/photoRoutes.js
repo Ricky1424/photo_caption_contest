@@ -2,16 +2,31 @@
 // Require in router from express
 const { Router } = require('express');
 const { Photos } = require('../models');
+const NodeCache = require('node-cache');
 
 // Create an instance of router
 const router = Router();
+const cache = new NodeCache();
 
 // Endpoint to retrieve all photos
 router.get('/photos', async (req, res) => {
     try {
         console.log("Getting all images: GET api/photos");
-        const images = await Photos.findAll();
-        return res.status(200).json(images);
+
+        // Check if photos are cached
+        const cachedPhotos = cache.get('allPhotos');
+        if (cachedPhotos) {
+            console.log("Photos retrived from cache");
+            return res.status(200).json(cachedPhotos);
+        } else {
+            const images = await Photos.findAll();
+
+            // Cache the photos for one hour
+            cache.set('allPhotos', images, 3600);
+
+            return res.status(200).json(images);
+        }
+        
     } catch(err) {
         return res.status(500).json(err);
     }

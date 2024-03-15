@@ -8,15 +8,19 @@ const router = Router();
 
 // Endpoint to add captions
 router.post('/caption', async (req, res) => {
-    try {
-        console.log("Adding caption to photo: POST /api/caption");
-        const { photo_id, user_id, caption} = req.body;
-        const user = await Users.findOne({ where: { id: user_id}});
-        const newCaption = await Caption.create({ photo_id, user_id: user.id, caption });
-        return res.status(201).json(newCaption);
-    } catch(err) {
-        console.log(err);
-        return res.status(500).json(err);
+    if (req.session.authenticated === true) {
+        try {
+            console.log("Adding caption to photo: POST /api/caption");
+            const { photo_id, user_id, caption} = req.body;
+            const user = await Users.findOne({ where: { id: user_id}});
+            const newCaption = await Caption.create({ photo_id, user_id: user.id, caption });
+            return res.status(201).json(newCaption);
+        } catch(err) {
+            console.log(err);
+            return res.status(500).json(err);
+        }
+    } else {
+        res.status(401).send("User not authenticated")
     }
 });
 

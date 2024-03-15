@@ -22,10 +22,9 @@ const memoryStore = new session.MemoryStore();
 app.use(
     session({
         secret: "topSecretString",
-        cookie: { maxAge: 1000 * 60 * 60 * 24, secure: true, sameSite: "none"},
+        cookie: { maxAge: 1000 * 60 * 60 * 24, secure: false, sameSite: "none"},
         resave: false,
         saveUninitialized: false,
-        secure: false,
         store: memoryStore,
     })
 );
